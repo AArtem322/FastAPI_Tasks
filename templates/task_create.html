@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="form-card">
+    <h2>Добавить задачу</h2>
+    <form action="/pages/tasks/create" method="post">
+        <label for="title">Название задачи</label>
+        <input id ="title" type="text" name="title" placeholder="Введите название задачи" required>
+        <button type="submit" class="button">Создать</button>
+    </form>
+</section>
+
+{% endblock %}

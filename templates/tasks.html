@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="page-title">
+    <h2>Список задач</h2>
+</section>
+
+{% if tasks %}
+    <div class="tasks-list">
+        {% for task in tasks %}
+            <article class="task-card">
+                <div>
+                    <h3>
+
+                        {% if task.is_done %}
+                            <span class="done">✅</span>
+                        {% else %}
+                            <span class="not-done">❌</span>
+                        {% endif %}
+
+                        {{ task.title }}
+
+                    </h3>
+                </div>
+                <div class="actions">
+                    <a class="button secondary" href="/pages/tasks/{{ task.id }}/edit">Изменить</a>
+                    <form action="/pages/tasks/{{ task.id }}/delete" method="post">
+                        <button type="submit" class="button danger">Удалить</button>
+                    </form>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+{% else %}
+    <p class="empty">Пока нет задач. Создай первую</p>
+{% endif %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
