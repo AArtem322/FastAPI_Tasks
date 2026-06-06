@@ -1,5 +1,3 @@
-
-
 from pydantic import BaseModel, ConfigDict
 
 
@@ -12,6 +10,7 @@ class TaskRead(BaseModel):
     title: str
     is_done: bool
     model_config = ConfigDict(from_attributes=True)
+
 
 class TaskUpdate(BaseModel):
     title: str | None = None

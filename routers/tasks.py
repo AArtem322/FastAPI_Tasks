@@ -1,7 +1,6 @@
 from fastapi import Depends, HTTPException, APIRouter
 from sqlalchemy.orm import Session
 from services import tasks as tasks_service
-
 from database import get_db
 from schemas import TaskRead, TaskCreate, TaskUpdate
 

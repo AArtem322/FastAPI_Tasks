@@ -1,9 +1,6 @@
 from fastapi import APIRouter, HTTPException, Request, Form, Depends
 from sqlalchemy.orm import Session
-
-
 from database import get_db
-
 from schemas import TaskRead, TaskCreate, TaskUpdate
 from fastapi.responses import RedirectResponse
 from services import tasks as tasks_service
@@ -33,34 +30,35 @@ def create_task_page(request: Request):
 
 @router.post("/tasks/create", response_model=TaskRead)
 def create_task_from_form(title: str = Form(...), db: Session = Depends(get_db)):
-        task = TaskCreate(title=title)
-        tasks_service.create_task(db, task)
-        return RedirectResponse(url="/pages/tasks", status_code=303)
+    task = TaskCreate(title=title)
+    tasks_service.create_task(db, task)
+    return RedirectResponse(url="/pages/tasks", status_code=303)
 
 
 @router.get("/tasks/{task_id}/edit")
 def edit_task_page(request: Request, task_id: int, db: Session = Depends(get_db)):
-        task = tasks_service.get_task_by_id(db, task_id)
-        if task is None:
-            raise HTTPException(status_code=404, detail="Task not found")
-        task_data = {"id": task.id, "title": task.title, "is_done": task.is_done}
-        return templates.TemplateResponse(request, "task_edit.html", {"request": request, "task": task_data})
+    task = tasks_service.get_task_by_id(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    task_data = {"id": task.id, "title": task.title, "is_done": task.is_done}
+    return templates.TemplateResponse(request, "task_edit.html", {"request": request, "task": task_data})
 
 
 @router.post("/tasks/{task_id}/edit", response_model=TaskRead)
-def edit_task_from_form(task_id: int, title: str = Form(...), is_done: bool = Form(False), db: Session = Depends(get_db)):
-        task = tasks_service.get_task_by_id(db, task_id)
-        if task is None:
-            raise HTTPException(status_code=404, detail="Task not found")
-        task_data = TaskUpdate(title=title, is_done=is_done)
-        tasks_service.update_task(db, task, task_data)
-        return RedirectResponse(url="/pages/tasks", status_code=303)
+def edit_task_from_form(task_id: int, title: str = Form(...), is_done: bool = Form(False),
+                        db: Session = Depends(get_db)):
+    task = tasks_service.get_task_by_id(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    task_data = TaskUpdate(title=title, is_done=is_done)
+    tasks_service.update_task(db, task, task_data)
+    return RedirectResponse(url="/pages/tasks", status_code=303)
 
 
 @router.post("/tasks/{task_id}/delete")
 def delete_task_page(task_id: int, db: Session = Depends(get_db)):
-        task = tasks_service.get_task_by_id(db, task_id)
-        if task is None:
-            raise HTTPException(status_code=404, detail="Task not found")
-        tasks_service.delete_task(db, task)
-        return RedirectResponse(url="/pages/tasks", status_code=303)
+    task = tasks_service.get_task_by_id(db, task_id)
+    if task is None:
+        raise HTTPException(status_code=404, detail="Task not found")
+    tasks_service.delete_task(db, task)
+    return RedirectResponse(url="/pages/tasks", status_code=303)
